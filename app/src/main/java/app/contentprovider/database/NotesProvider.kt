@@ -118,10 +118,10 @@ class NotesProvider : ContentProvider() {
         const val AUTHORITY = "app.contentprovider.provider"
 
         //converte em URI a string que vamos passar
-        val BASE_URI = Uri.parse("content://$AUTHORITY")
+        val BASE_URI: Uri = Uri.parse("content://$AUTHORITY")
         //nomeando URL de notes, o mesmo que "content://app.contentprovider.provider/notes
         //withAppendedPath cria a "/" do caminho
-        val URI_NOTES = Uri.withAppendedPath(BASE_URI, "notes")
+        val URI_NOTES: Uri = Uri.withAppendedPath(BASE_URI, "notes")
         const val NOTES = 1
         const val NOTES_BY_ID = 2
     }
