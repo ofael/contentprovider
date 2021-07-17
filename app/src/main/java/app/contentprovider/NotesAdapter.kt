@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
 import app.contentprovider.database.NotesDataBaseHelper.Companion.DESCRIPTION_NOTES
 import app.contentprovider.database.NotesDataBaseHelper.Companion.TITLE_NOTES
-import java.util.zip.Inflater
 
 class NotesAdapter(private val listener: NoteClickListener) : RecyclerView.Adapter<NotesViewHolder>() {
 
@@ -19,6 +17,9 @@ class NotesAdapter(private val listener: NoteClickListener) : RecyclerView.Adapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder =
         NotesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.note_item, parent, false   ))
+
+    override fun getItemCount(): Int = if(mCursor != null) mCursor?.count as Int else 0
+
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
         mCursor?.moveToPosition(position)
@@ -37,13 +38,12 @@ class NotesAdapter(private val listener: NoteClickListener) : RecyclerView.Adapt
         }
     }
 
-    override fun getItemCount(): Int = if(mCursor != null) mCursor?.count as Int else 0
-
     fun setCursor (newCursor : Cursor?){
         mCursor = newCursor
         notifyDataSetChanged()
     }
 }
+
 
 class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     val noteTitle = itemView.findViewById(R.id.note_title) as TextView

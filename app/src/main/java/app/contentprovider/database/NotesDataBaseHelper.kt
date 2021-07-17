@@ -7,17 +7,19 @@ import android.provider.BaseColumns._ID
 
 class NotesDataBaseHelper(
     context : Context
-) : SQLiteOpenHelper(context, "databaseNotes", null, 1) {
+) : SQLiteOpenHelper(context, "dataBase", null, 1) {
+    //criando VARIAVEIS de tabelas e colunas no nosso banco de dados
+
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE $TABLE_NOTES (" +
-                "$_ID INTERGER NOT NULL PRIMARY KEY ," +
-                "$TITLE_NOTES TEXT NOT NULL," +
-                "$DESCRIPTION_NOTES TEXT NOT NULL )")
+        "$_ID INTEGER NOT NULL PRIMARY KEY, " +
+        "$TITLE_NOTES TEXT NOT NULL, " +
+        "$DESCRIPTION_NOTES TEXT NOT NULL)"
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     }
-    //criando VARIAVEIS de tabelas e colunas no nosso banco de dados
     companion object {
         const val TABLE_NOTES: String = "Notes"
         const val TITLE_NOTES: String = "title"

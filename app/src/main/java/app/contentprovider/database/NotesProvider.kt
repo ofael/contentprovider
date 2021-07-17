@@ -56,7 +56,7 @@ class NotesProvider : ContentProvider() {
         if(mUriMatcher.match(uri) == NOTES){
             val db: SQLiteDatabase = dbHelper.writableDatabase
             val id: Long = db.insert(TABLE_NOTES, null, values)
-            val insertUri : Uri = Uri.withAppendedPath(BASE_URI, id.toString())
+            val insertUri = Uri.withAppendedPath(BASE_URI, id.toString())
             db.close()
             //notificar as mudanças
             context?.contentResolver?.notifyChange(uri, null)
@@ -75,7 +75,7 @@ class NotesProvider : ContentProvider() {
             mUriMatcher.match(uri) == NOTES -> {
                 val db : SQLiteDatabase = dbHelper.writableDatabase
                 //toda requisição do nosso sql vai ser armazenada na nossa variavel cursor
-                val cursor: Cursor =
+                val cursor =
                     db.query(TABLE_NOTES, projection, selection, selectionArgs, null,null, sortOrder)
                 cursor.setNotificationUri(context?.contentResolver, uri)
                 cursor
@@ -83,7 +83,7 @@ class NotesProvider : ContentProvider() {
 
             mUriMatcher.match(uri) == NOTES_BY_ID -> {
                 val db : SQLiteDatabase = dbHelper.writableDatabase
-                val cursor : Cursor = db.query(TABLE_NOTES,projection,"$_ID=?",
+                val cursor = db.query(TABLE_NOTES,projection,"$_ID=?",
                     arrayOf(uri.lastPathSegment),null,null,sortOrder)
                 cursor.setNotificationUri(context?.contentResolver, uri)
                 cursor
@@ -103,7 +103,7 @@ class NotesProvider : ContentProvider() {
         if(mUriMatcher.match(uri) == NOTES_BY_ID) {
             val db: SQLiteDatabase = dbHelper.writableDatabase
             val lineAffect =
-                db.update(TABLE_NOTES, values, "$_ID = ?", arrayOf(uri.lastPathSegment))
+                db.update(TABLE_NOTES, values, "$_ID=?", arrayOf(uri.lastPathSegment))
             db.close()
             context?.contentResolver?.notifyChange(uri, null)
             return lineAffect

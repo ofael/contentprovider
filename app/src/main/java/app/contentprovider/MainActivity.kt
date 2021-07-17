@@ -16,10 +16,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 //Precisamos instanciar o LoaderManager, faz a busca em segundo plano no cursor
 class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> {
-    lateinit var notesRecycleView : RecyclerView
-    lateinit var noteAdd : FloatingActionButton
+    private lateinit var noteRecycleView : RecyclerView
+    private lateinit var noteAdd : FloatingActionButton
 
-    lateinit var adapter : NotesAdapter
+    private lateinit var adapter : NotesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,24 +27,28 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> 
 
         noteAdd = findViewById(R.id.note_add)
         noteAdd.setOnClickListener{
-
+            NotesDetailsFragment().show(supportFragmentManager,"dialog")
         }
 
         adapter = NotesAdapter(object : NoteClickListener{
             override fun noteClickItem(cursor: Cursor) {
-                val id: Long = cursor.getLong(cursor.getColumnIndex(_ID))
+                val id = cursor.getLong(cursor.getColumnIndex(_ID))
+                val fragment = NotesDetailsFragment.newInstance(id)
+                fragment.show(supportFragmentManager,"dialog")
             }
 
             override fun noteRemoveItem(cursor: Cursor?) {
-                val id : Long? = cursor?.getLong((cursor.getColumnIndex(_ID)))
+                val id = cursor?.getLong(cursor.getColumnIndex(_ID))
                 contentResolver.delete(Uri.withAppendedPath(URI_NOTES, id.toString()), null, null)
             }
         })
         adapter.setHasStableIds(true)
 
-        notesRecycleView = findViewById(R.id.notes_recycle)
-        notesRecycleView.layoutManager = LinearLayoutManager(this)
-        notesRecycleView.adapter = adapter
+        noteRecycleView = findViewById(R.id.notes_recycle)
+        noteRecycleView.layoutManager = LinearLayoutManager(this)
+        noteRecycleView.adapter = adapter
+
+        LoaderManager.getInstance(this).initLoader(0,null,this)
     }
     //instanciar aquilo que será buscado
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> =
@@ -53,11 +57,11 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> 
     //pegar os dados recebidos do on creatloader e manipular
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
         if(data != null){
-
+            adapter.setCursor(data)
         }
     }
     //acabar com a pesquisa em segundo plano no LoaderManager
     override fun onLoaderReset(loader: Loader<Cursor>) {
-        TODO("Not yet implemented")
+        adapter.setCursor(null)
     }
 }
